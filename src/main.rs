@@ -1,33 +1,44 @@
+use bevy::pbr::CascadeShadowConfig;
 use bevy::prelude::*;
+use bevy::render::camera::ScalingMode;
 
 fn main() {
     App::new()
-        .insert_resource(GreetTimer(Timer::from_seconds(2.0, TimerMode::Repeating)))
         .add_plugins(DefaultPlugins)
-        .add_systems(Startup, add_people)
-        .add_systems(Update, greet_people)
+        .add_systems(Startup, setup)
         .run();
 }
 
-#[derive(Component)]
-struct Person;
+fn setup(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>
+) {
+    commands.spawn(PbrBundle {
+        mesh: meshes.add(shape::Plane::from_size(5.0).into()),
+        material: materials.add(Color::rgb(0.3, 0.5, 0.3).into()),
+        ..default()
+    });
 
-#[derive(Component)]
-struct Name(String);
+    commands.spawn(DirectionalLightBundle {
+        directional_light: DirectionalLight::default(),
+        cascade_shadow_config: CascadeShadowConfig::default(),
+        ..default()
+    });
 
-#[derive(Resource)]
-struct GreetTimer(Timer);
+    commands.insert_resource(AmbientLight {
+        color: Color::rgb(1.0, 1.0, 1.0),
+        brightness: 0.4,
+    });
 
-fn add_people(mut commands: Commands) {
-    commands.spawn((Person, Name("Elaina Proctor".to_string())));
-    commands.spawn((Person, Name("Renzo Hume".to_string())));
-    commands.spawn((Person, Name("Zayna Nieves".to_string())));
-}
-
-fn greet_people(time: Res<Time>, mut timer: ResMut<GreetTimer>, query: Query<&Name, With<Person>>) {
-    if timer.0.tick(time.delta()).just_finished() {
-        for name in &query {
-            println!("hello {}!", name.0);
+    commands.spawn(Camera3dBundle {
+        projection: OrthographicProjection {
+            scale: 3.0,
+            scaling_mode: ScalingMode::FixedVertical(2.0),
+            ..default()
         }
-    }
+            .into(),
+        transform: Transform::from_xyz(5.0, 5.0, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
+        ..default()
+    });
 }

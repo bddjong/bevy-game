@@ -1,19 +1,20 @@
 mod rotate;
 
 use std::f32::consts::PI;
-use bevy::pbr::CascadeShadowConfigBuilder;
+use bevy::core_pipeline::experimental::taa::TemporalAntiAliasBundle;
+use bevy::pbr::{CascadeShadowConfigBuilder, ScreenSpaceAmbientOcclusionBundle};
 use bevy::prelude::*;
-use bevy::render::camera::ScalingMode;
 use bevy_editor_pls::prelude::*;
 use rotate::{RotateSpeed, rotate_system};
 
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::rgb(0.5, 0.5, 0.6)))
+        .insert_resource(Msaa::Off)
         .add_plugins(DefaultPlugins
             .set(WindowPlugin {
                 primary_window: Some(Window {
-                    title: String::from("Hello world!"),
+                    title: String::from("Clanborn"),
                     present_mode: bevy::window::PresentMode::AutoVsync,
                     ..default()
                 }),
@@ -29,26 +30,24 @@ fn setup_lighting(
     mut commands: Commands) {
     commands.insert_resource(AmbientLight {
         color: Color::rgb(1.0, 1.0, 1.0),
-        brightness: 0.1,
+        brightness: 0.20,
     });
 
     commands.spawn(DirectionalLightBundle {
         directional_light: DirectionalLight {
             shadows_enabled: true,
-            illuminance: 20000.0,
             ..default()
         },
         transform: Transform {
             translation: Vec3::new(0.0, 2.0, 0.0),
-            rotation: Quat::from_rotation_x(-PI / 4.),
+            rotation: Quat::from_rotation_x(-PI / 3.),
             ..default()
         },
         cascade_shadow_config: CascadeShadowConfigBuilder {
-            first_cascade_far_bound: 15.0,
-            maximum_distance: 40.0,
+            first_cascade_far_bound: 5.0,
+            maximum_distance: 20.0,
             ..default()
-        }
-            .into(),
+        }.into(),
         ..default()
     });
 }
@@ -57,15 +56,15 @@ fn setup_camera(
     mut commands: Commands,
 ) {
     commands.spawn(Camera3dBundle {
-        projection: OrthographicProjection {
-            scale: 3.0,
-            scaling_mode: ScalingMode::FixedVertical(2.0),
+        camera: Camera {
+            hdr: true,
             ..default()
-        }
-            .into(),
-        transform: Transform::from_xyz(5.0, 5.0, 5.0).looking_at(Vec3::ZERO, Vec3::Y),
+        },
+        transform: Transform::from_xyz(4.0, 4.0, 4.0).looking_at(Vec3::ZERO, Vec3::Y),
         ..default()
-    });
+    })
+        .insert(ScreenSpaceAmbientOcclusionBundle::default())
+        .insert(TemporalAntiAliasBundle::default());
 }
 
 fn setup_scene(
@@ -79,7 +78,31 @@ fn setup_scene(
         material: materials.add(Color::rgb(0.3, 0.5, 0.3).into()),
         ..default()
     });
+
     // cubes
+    commands.spawn(PbrBundle {
+        mesh: meshes.add(Mesh::from(shape::Cube { size: 0.8 })),
+        material: materials.add(Color::rgb(0.8, 0.8, 0.8).into()),
+        transform: Transform::from_xyz(0.0, 0.4, 0.0),
+        ..default()
+    });
+
+    // cubes
+    commands.spawn(PbrBundle {
+        mesh: meshes.add(Mesh::from(shape::Cube { size: 0.3 })),
+        material: materials.add(Color::rgb(0.8, 0.8, 0.8).into()),
+        transform: Transform::from_xyz(0.55, 0.15, 0.2),
+        ..default()
+    });
+
+    // cubes
+    commands.spawn(PbrBundle {
+        mesh: meshes.add(Mesh::from(shape::Cube { size: 0.6 })),
+        material: materials.add(Color::rgb(0.8, 0.8, 0.8).into()),
+        transform: Transform::from_xyz(-0.5, 0.0, 0.5),
+        ..default()
+    });
+
     commands.spawn((PbrBundle {
         mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
         material: materials.add(Color::rgb(0.8, 0.2, 0.2).into()),

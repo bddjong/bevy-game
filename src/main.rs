@@ -1,17 +1,18 @@
+mod rotate;
+
 use std::f32::consts::PI;
 use bevy::pbr::CascadeShadowConfigBuilder;
 use bevy::prelude::*;
 use bevy::render::camera::ScalingMode;
-
-#[derive(Component)]
-struct Rotator;
+use rotate::{RotateSpeed, rotate_system};
 
 fn main() {
     App::new()
+        .insert_resource(ClearColor(Color::rgb(0.5, 0.5, 0.6)))
         .add_plugins(DefaultPlugins
             .set(WindowPlugin {
                 primary_window: Some(Window {
-                    title: String::from("Hellow world!"),
+                    title: String::from("Hello world!"),
                     present_mode: bevy::window::PresentMode::AutoVsync,
                     ..default()
                 }),
@@ -20,12 +21,6 @@ fn main() {
         .add_systems(Startup, (setup_camera, setup_lighting, setup_scene))
         .add_systems(Update, rotate_system)
         .run();
-}
-
-fn rotate_system(mut query: Query<&mut Transform, With<Rotator>>, time: Res<Time>) {
-    for mut transform in &mut query {
-        transform.rotate_y(time.delta_seconds() * 1.0)
-    }
 }
 
 fn setup_lighting(
@@ -83,28 +78,39 @@ fn setup_scene(
         ..default()
     });
     // cubes
-    commands.spawn(PbrBundle {
+    commands.spawn((PbrBundle {
         mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
         material: materials.add(Color::rgb(0.8, 0.2, 0.2).into()),
         transform: Transform::from_xyz(1.5, 0.5, 1.5),
         ..default()
-    });
-    commands.spawn(PbrBundle {
+    }, RotateSpeed {
+        speed: 0.7
+    }));
+
+    commands.spawn((PbrBundle {
         mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
         material: materials.add(Color::rgb(0.2, 0.7, 0.3).into()),
         transform: Transform::from_xyz(1.5, 0.5, -1.5),
         ..default()
-    });
-    commands.spawn(PbrBundle {
+    }, RotateSpeed {
+        speed: 0.2
+    }));
+
+    commands.spawn((PbrBundle {
         mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
         material: materials.add(Color::rgb(0.3, 0.3, 0.9).into()),
         transform: Transform::from_xyz(-1.5, 0.5, 1.5),
         ..default()
-    });
-    commands.spawn(PbrBundle {
+    }, RotateSpeed {
+        speed: 1.0
+    }));
+
+    commands.spawn((PbrBundle {
         mesh: meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
         material: materials.add(Color::rgb(0.8, 0.8, 0.3).into()),
         transform: Transform::from_xyz(-1.5, 0.5, -1.5),
         ..default()
-    });
+    }, RotateSpeed {
+        speed: 0.5
+    }));
 }

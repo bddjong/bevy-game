@@ -4,6 +4,7 @@ use std::f32::consts::PI;
 use bevy::pbr::CascadeShadowConfigBuilder;
 use bevy::prelude::*;
 use bevy::render::camera::ScalingMode;
+use bevy_editor_pls::prelude::*;
 use rotate::{RotateSpeed, rotate_system};
 
 fn main() {
@@ -18,6 +19,7 @@ fn main() {
                 }),
                 ..default()
             }))
+        .add_plugins(EditorPlugin::default())
         .add_systems(Startup, (setup_camera, setup_lighting, setup_scene))
         .add_systems(Update, rotate_system)
         .run();

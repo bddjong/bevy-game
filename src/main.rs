@@ -8,7 +8,15 @@ struct Rotator;
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins
+            .set(WindowPlugin {
+                primary_window: Some(Window {
+                    title: String::from("Hellow world!"),
+                    present_mode: bevy::window::PresentMode::AutoVsync,
+                    ..default()
+                }),
+                ..default()
+            }))
         .add_systems(Startup, setup)
         .add_systems(Update, rotate_system)
         .run();

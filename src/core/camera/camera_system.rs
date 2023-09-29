@@ -3,7 +3,7 @@ use bevy::prelude::{Camera3dBundle, Commands, Transform};
 use bevy::render::camera::{Camera, OrthographicProjection, Projection, ScalingMode};
 use bevy::utils::default;
 
-pub fn setup_camera(
+pub fn setup_ortho_camera(
     mut commands: Commands,
 ) {
     commands.spawn(Camera3dBundle {
@@ -23,4 +23,4 @@ pub fn setup_camera(
     });
 }
 
-fn camera_system() {}
+pub fn camera_system() {}

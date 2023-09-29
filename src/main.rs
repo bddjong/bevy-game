@@ -1,19 +1,22 @@
-use std::f32::consts::PI;
-use bevy::core_pipeline::experimental::taa::TemporalAntiAliasBundle;
+mod rotate;
+mod camera;
 
-use bevy::pbr::{CascadeShadowConfigBuilder, ScreenSpaceAmbientOcclusionBundle, ScreenSpaceAmbientOcclusionQualityLevel, ScreenSpaceAmbientOcclusionSettings};
+use std::f32::consts::PI;
+
+use bevy::pbr::CascadeShadowConfigBuilder;
 use bevy::prelude::*;
-use bevy::render::camera::ScalingMode;
+use bevy::window::close_on_esc;
 use bevy_editor_pls::prelude::*;
 
-use rotate::{rotate_system, RotateSpeed};
-
-mod rotate;
+use crate::{
+    camera::camera_system::setup_camera,
+    rotate::{rotate_system, RotateSpeed}
+};
 
 fn main() {
     App::new()
         .insert_resource(ClearColor(Color::rgb(0.5, 0.5, 0.6)))
-        .insert_resource(Msaa::Off)
+        .insert_resource(Msaa::Sample4)
         .add_plugins(DefaultPlugins
             .set(WindowPlugin {
                 primary_window: Some(Window {
@@ -24,7 +27,9 @@ fn main() {
                 ..default()
             }))
         .add_plugins(EditorPlugin::default())
+
         .add_systems(Startup, (setup_camera, setup_lighting, setup_scene))
+        .add_systems(Update, close_on_esc)
         .add_systems(Update, rotate_system)
         .run();
 }
@@ -53,26 +58,6 @@ fn setup_lighting(
             maximum_distance: 50.0,
             ..default()
         }.into(),
-        ..default()
-    });
-}
-
-fn setup_camera(
-    mut commands: Commands,
-) {
-    commands.spawn(Camera3dBundle {
-        projection: Projection::Orthographic(OrthographicProjection {
-            near: 0.01,
-            far: 50.0,
-            scaling_mode: ScalingMode::FixedVertical(2.0),
-            scale: 5.0,
-            ..default()
-        }),
-        camera: Camera {
-            hdr: true,
-            ..default()
-        },
-        transform: Transform::from_xyz(4.0, 4.0, 4.0).looking_at(Vec3::ZERO, Vec3::Y),
         ..default()
     });
 }

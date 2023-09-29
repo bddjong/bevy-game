@@ -1,11 +1,14 @@
-mod rotate;
-
 use std::f32::consts::PI;
 use bevy::core_pipeline::experimental::taa::TemporalAntiAliasBundle;
-use bevy::pbr::{CascadeShadowConfigBuilder, ScreenSpaceAmbientOcclusionBundle};
+
+use bevy::pbr::{CascadeShadowConfigBuilder, ScreenSpaceAmbientOcclusionBundle, ScreenSpaceAmbientOcclusionQualityLevel, ScreenSpaceAmbientOcclusionSettings};
 use bevy::prelude::*;
+use bevy::render::camera::ScalingMode;
 use bevy_editor_pls::prelude::*;
-use rotate::{RotateSpeed, rotate_system};
+
+use rotate::{rotate_system, RotateSpeed};
+
+mod rotate;
 
 fn main() {
     App::new()
@@ -29,13 +32,15 @@ fn main() {
 fn setup_lighting(
     mut commands: Commands) {
     commands.insert_resource(AmbientLight {
-        color: Color::rgb(1.0, 1.0, 1.0),
+        color: Color::rgb(1.0, 0.95, 0.96),
         brightness: 0.20,
     });
 
     commands.spawn(DirectionalLightBundle {
         directional_light: DirectionalLight {
             shadows_enabled: true,
+            illuminance: 30000.0,
+            shadow_normal_bias: 1.0,
             ..default()
         },
         transform: Transform {
@@ -45,7 +50,7 @@ fn setup_lighting(
         },
         cascade_shadow_config: CascadeShadowConfigBuilder {
             first_cascade_far_bound: 5.0,
-            maximum_distance: 20.0,
+            maximum_distance: 50.0,
             ..default()
         }.into(),
         ..default()
@@ -56,15 +61,20 @@ fn setup_camera(
     mut commands: Commands,
 ) {
     commands.spawn(Camera3dBundle {
+        projection: Projection::Orthographic(OrthographicProjection {
+            near: 0.01,
+            far: 50.0,
+            scaling_mode: ScalingMode::FixedVertical(2.0),
+            scale: 5.0,
+            ..default()
+        }),
         camera: Camera {
             hdr: true,
             ..default()
         },
         transform: Transform::from_xyz(4.0, 4.0, 4.0).looking_at(Vec3::ZERO, Vec3::Y),
         ..default()
-    })
-        .insert(ScreenSpaceAmbientOcclusionBundle::default())
-        .insert(TemporalAntiAliasBundle::default());
+    });
 }
 
 fn setup_scene(

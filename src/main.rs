@@ -1,3 +1,4 @@
+use bevy::diagnostic::FrameTimeDiagnosticsPlugin;
 use bevy::prelude::*;
 use bevy::window::close_on_esc;
 use bevy_editor_pls::prelude::*;
@@ -16,13 +17,12 @@ fn main() {
         .add_plugins(DefaultPlugins
             .set(WindowPlugin {
                 primary_window: Some(Window {
-                    title: String::from("Clanborn"),
-                    present_mode: bevy::window::PresentMode::AutoVsync,
+                    title: String::from("Bevy Demo"),
                     ..default()
                 }),
                 ..default()
             }))
-        .add_plugins(EditorPlugin::default())
+        .add_plugins((EditorPlugin::default(), FrameTimeDiagnosticsPlugin::default()))
         .add_plugins(OrthographicCameraPlugin)
         .add_systems(Startup, setup_lighting)
         .add_systems(Update, close_on_esc)

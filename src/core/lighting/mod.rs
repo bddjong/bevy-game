@@ -1,11 +1,21 @@
 use std::f32::consts::PI;
 
+use bevy::app::{App, Plugin, Startup};
 use bevy::math::{Quat, Vec3};
 use bevy::pbr::{AmbientLight, CascadeShadowConfigBuilder, DirectionalLight, DirectionalLightBundle};
 use bevy::prelude::{Color, Commands, Transform};
 use bevy::utils::default;
 
-pub fn setup_lighting(
+pub struct SunlightPlugin;
+
+impl Plugin for SunlightPlugin {
+    fn build(&self, app: &mut App) {
+        app
+            .add_systems(Startup, setup_lighting);
+    }
+}
+
+fn setup_lighting(
     mut commands: Commands) {
     commands.insert_resource(AmbientLight {
         color: Color::rgb(1.0, 0.95, 0.96),

@@ -3,10 +3,8 @@ use bevy::prelude::*;
 use bevy::window::close_on_esc;
 use bevy_editor_pls::prelude::*;
 
-use core::{
-    camera::OrthographicCameraPlugin,
-    lighting::setup_lighting,
-};
+use core::{camera::OrthographicCameraPlugin,
+           lighting::SunlightPlugin};
 
 mod core;
 
@@ -23,8 +21,7 @@ fn main() {
                 ..default()
             }))
         .add_plugins((EditorPlugin::default(), FrameTimeDiagnosticsPlugin::default()))
-        .add_plugins(OrthographicCameraPlugin)
-        .add_systems(Startup, setup_lighting)
+        .add_plugins((OrthographicCameraPlugin, SunlightPlugin))
         .add_systems(Update, close_on_esc)
         .run();
 }

@@ -19,14 +19,13 @@ fn setup_lighting(
     mut commands: Commands) {
     commands.insert_resource(AmbientLight {
         color: Color::rgb(1.0, 0.95, 0.96),
-        brightness: 0.20,
+        brightness: 0.25,
     });
 
     commands.spawn(DirectionalLightBundle {
         directional_light: DirectionalLight {
             shadows_enabled: true,
-            illuminance: 30000.0,
-            shadow_normal_bias: 1.0,
+            illuminance: 33000.0,
             ..default()
         },
         transform: Transform {

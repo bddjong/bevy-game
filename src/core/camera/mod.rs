@@ -22,7 +22,7 @@ fn setup_orthographic_camera(
             near: 0.01,
             far: 50.0,
             scaling_mode: ScalingMode::FixedVertical(2.0),
-            scale: 5.0,
+            scale: 15.0,
             ..default()
         }),
         camera: Camera {
@@ -34,4 +34,6 @@ fn setup_orthographic_camera(
     });
 }
 
-fn camera_system() {}
+fn camera_system() {
+
+}

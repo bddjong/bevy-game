@@ -10,7 +10,10 @@ use core::{
 use core::mesh::hexagon;
 use hexagon::create_hexagon_plane;
 
+use crate::hexmap::get_world_pos;
+
 mod core;
+mod hexmap;
 
 fn main() {
     App::new()
@@ -33,29 +36,19 @@ fn main() {
 
 fn create_world(mut commands: Commands, mut meshes: ResMut<Assets<Mesh>>, mut materials: ResMut<Assets<StandardMaterial>>) {
     let radius = 1.0;
-    let height = 3_f32.sqrt() * radius;
     let mesh_handle = meshes.add(create_hexagon_plane(radius));
-    let material_handle = materials.add(Color::rgb(1.0, 0.5, 0.5).into());
-    let material_handle_b = materials.add(Color::rgb(0.5, 1.0, 0.5).into());
+    let material_handle_red = materials.add(Color::rgb(1.0, 0.5, 0.5).into());
+    let material_handle_green = materials.add(Color::rgb(0.5, 1.0, 0.5).into());
 
-    commands.spawn(PbrBundle {
-        mesh: mesh_handle.clone(),
-        material: material_handle.clone(),
-        transform: Transform::from_xyz(0.0, 0.0, 0.0),
-        ..Default::default()
-    });
-
-    commands.spawn(PbrBundle {
-        mesh: mesh_handle.clone(),
-        material: material_handle.clone(),
-        transform: Transform::from_xyz(0.0, 0.0, height),
-        ..Default::default()
-    });
-
-    commands.spawn(PbrBundle {
-        mesh: mesh_handle.clone(),
-        material: material_handle_b.clone(),
-        transform: Transform::from_xyz(3.0 / 2.0 * radius, 0.0, height / 2.0),
-        ..Default::default()
-    });
+    for y in 0..8 {
+        for x in 0..8 {
+            commands.spawn(PbrBundle {
+                mesh: mesh_handle.clone(),
+                material: material_handle_red.clone(),
+                transform: Transform::from_translation(
+                    get_world_pos(radius, Vec2::new(x as f32, y as f32), 0.0)),
+                ..Default::default()
+            });
+        }
+    }
 }

@@ -1,10 +1,14 @@
 use bevy::app::{App, Plugin, Startup, Update};
 use bevy::input::Input;
 use bevy::math::Vec3;
-use bevy::prelude::{Camera, Camera3dBundle, Commands, KeyCode, OrthographicProjection, Projection, Query, Res, Transform, With};
+use bevy::prelude::{Camera, Camera3dBundle, Commands, KeyCode, OrthographicProjection, Projection, Query, Res, Resource, Transform, With};
 use bevy::render::camera::ScalingMode;
 use bevy::time::Time;
 use bevy::utils::default;
+
+use crate::core::camera::camera_config::CameraConfig;
+
+pub mod camera_config;
 
 pub struct OrthographicCameraPlugin;
 
@@ -18,11 +22,12 @@ impl Plugin for OrthographicCameraPlugin {
 
 fn setup_orthographic_camera(
     mut commands: Commands,
+    camera_config: Res<CameraConfig>,
 ) {
     commands.spawn(Camera3dBundle {
         projection: Projection::Orthographic(OrthographicProjection {
             near: 0.01,
-            far: 100.0,
+            far: camera_config.max_distance,
             scaling_mode: ScalingMode::FixedVertical(2.0),
             scale: 15.0,
             ..default()

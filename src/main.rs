@@ -10,6 +10,7 @@ use core::{
 use core::mesh::hexagon;
 use hexagon::create_hexagon_plane;
 
+use crate::core::camera::camera_config::CameraConfig;
 use crate::hexmap::get_world_pos;
 
 mod core;
@@ -19,6 +20,7 @@ fn main() {
     App::new()
         .insert_resource(ClearColor(Color::rgb(0.5, 0.5, 0.6)))
         .insert_resource(Msaa::Sample4)
+        .insert_resource(CameraConfig::default())
         .add_plugins(DefaultPlugins
             .set(WindowPlugin {
                 primary_window: Some(Window {

@@ -5,10 +5,7 @@ use bevy::prelude::{Camera, Camera3dBundle, Commands, KeyCode, OrthographicProje
 use bevy::render::camera::ScalingMode;
 use bevy::time::Time;
 use bevy::utils::default;
-
-use crate::core::camera::camera_config::CameraConfig;
-
-pub mod camera_config;
+use crate::core::config::camera_config::CameraConfig;
 
 pub struct OrthographicCameraPlugin;
 

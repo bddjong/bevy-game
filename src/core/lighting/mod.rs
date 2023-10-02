@@ -6,7 +6,7 @@ use bevy::pbr::{AmbientLight, CascadeShadowConfigBuilder, DirectionalLight, Dire
 use bevy::prelude::{Color, Commands, Res, Transform};
 use bevy::utils::default;
 
-use crate::core::camera::camera_config::CameraConfig;
+use crate::core::config::camera_config::CameraConfig;
 
 pub struct SunlightPlugin;
 

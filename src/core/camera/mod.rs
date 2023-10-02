@@ -47,11 +47,16 @@ fn camera_system(time: Res<Time>, keys: Res<Input<KeyCode>>, mut query: Query<&m
         let mut dy = 0.0;
         let speed = 50.0;
 
+        let local_forward = transform.forward();
+        let right_vector = transform.right();
+        let forward_vector = Vec3::new(local_forward.x, 0.0, local_forward.z).normalize();
+
+
         if keys.pressed(KeyCode::W) {
-            dy -= 1.0;
+            dy += 1.0;
         }
         if keys.pressed(KeyCode::S) {
-            dy += 1.0;
+            dy -= 1.0;
         }
         if keys.pressed(KeyCode::D) {
             dx += 1.0;
@@ -60,7 +65,7 @@ fn camera_system(time: Res<Time>, keys: Res<Input<KeyCode>>, mut query: Query<&m
             dx -= 1.0;
         }
 
-        let delta_movement = Vec3::new(dx, 0.0, dy);
+        let delta_movement = right_vector * dx + forward_vector * dy;
 
         if delta_movement.length() > 0.0 {
             transform.translation += delta_movement.normalize() * speed * time.delta_seconds();

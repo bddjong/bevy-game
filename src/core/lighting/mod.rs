@@ -35,7 +35,7 @@ fn setup_lighting(
         },
         cascade_shadow_config: CascadeShadowConfigBuilder {
             first_cascade_far_bound: 5.0,
-            maximum_distance: 50.0,
+            maximum_distance: 100.0,
             ..default()
         }.into(),
         ..default()

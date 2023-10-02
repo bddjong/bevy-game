@@ -38,10 +38,9 @@ fn create_world(mut commands: Commands, mut meshes: ResMut<Assets<Mesh>>, mut ma
     let radius = 1.0;
     let mesh_handle = meshes.add(create_hexagon_plane(radius));
     let material_handle_red = materials.add(Color::rgb(1.0, 0.5, 0.5).into());
-    let material_handle_green = materials.add(Color::rgb(0.5, 1.0, 0.5).into());
 
-    for y in 0..10 {
-        for x in 0..10 {
+    for y in 0..64 {
+        for x in 0..64 {
             commands.spawn(PbrBundle {
                 mesh: mesh_handle.clone(),
                 material: material_handle_red.clone(),

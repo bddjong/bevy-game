@@ -9,8 +9,8 @@ use core::{
 };
 use core::mesh::hexagon;
 use hexagon::create_hexagon_plane;
+use crate::core::config::camera_config::CameraConfig;
 
-use crate::core::camera::camera_config::CameraConfig;
 use crate::hexmap::get_world_pos;
 
 mod core;
@@ -29,7 +29,7 @@ fn main() {
                 }),
                 ..default()
             }))
-        .add_plugins((EditorPlugin::default(), LogDiagnosticsPlugin::default(), FrameTimeDiagnosticsPlugin::default()))
+       // .add_plugins((EditorPlugin::default(), LogDiagnosticsPlugin::default(), FrameTimeDiagnosticsPlugin::default()))
         .add_plugins((OrthographicCameraPlugin, SunlightPlugin))
         .add_systems(Startup, create_world)
         .add_systems(Update, close_on_esc)

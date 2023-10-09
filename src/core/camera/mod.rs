@@ -3,7 +3,7 @@ use bevy::input::Input;
 use bevy::input::mouse::{MouseScrollUnit, MouseWheel};
 use bevy::math::Vec3;
 use bevy::prelude::{Camera3dBundle, Commands, Component, EventReader, KeyCode, Query, Res, Transform, With};
-use bevy::render::camera::{Camera, ScalingMode, Projection, OrthographicProjection};
+use bevy::render::camera::{Camera, OrthographicProjection, Projection, ScalingMode};
 use bevy::time::Time;
 use bevy::utils::default;
 
@@ -76,8 +76,9 @@ fn camera_panning_system(time: Res<Time>, keys: Res<Input<KeyCode>>, mut query: 
 }
 
 fn camera_zoom_system(
+    camera_config: Res<CameraConfig>,
     mut scroll_event: EventReader<MouseWheel>,
-    mut query: Query<&mut Projection, (With<MainCamera>)>,
+    mut query: Query<&mut Projection, With<MainCamera>>,
 ) {
     for ev in scroll_event.iter() {
         let mut projection = query.single_mut();
@@ -87,10 +88,10 @@ fn camera_zoom_system(
 
             match ev.unit {
                 MouseScrollUnit::Line => {
-                    scale += ev.y * 0.1;
+                    scale += ev.y * 0.1 * camera_config.zoom_sensitivity;
                 }
                 MouseScrollUnit::Pixel => {
-                    scale += ev.y * 0.01;
+                    scale += ev.y * 0.01 * camera_config.zoom_sensitivity
                 }
             }
 

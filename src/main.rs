@@ -29,7 +29,7 @@ fn main() {
                 }),
                 ..default()
             }))
-       // .add_plugins((EditorPlugin::default(), LogDiagnosticsPlugin::default(), FrameTimeDiagnosticsPlugin::default()))
+        .add_plugins((EditorPlugin::default(), LogDiagnosticsPlugin::default(), FrameTimeDiagnosticsPlugin::default()))
         .add_plugins((OrthographicCameraPlugin, SunlightPlugin))
         .add_systems(Startup, create_world)
         .add_systems(Update, close_on_esc)

@@ -1,4 +1,5 @@
 use std::f32::consts::PI;
+use bevy::math::Vec3;
 use bevy::prelude::Mesh;
 use bevy::render::mesh::{Indices, PrimitiveTopology};
 
@@ -26,4 +27,16 @@ pub fn create_hexagon_plane(radius: f32) -> Mesh {
     );
 
     return mesh;
+}
+
+fn compute_hexagon_vertices(radius: f32, center: Vec3) -> Vec<[f32; 3]> {
+    (0..6)
+        .map(|i| {
+            let angle_deg: f32 = 60.0 * i as f32;
+            let angle_rad: f32 = std::f32::consts::PI / 180.0 * angle_deg;
+            let x = center.x + radius * angle_rad.cos();
+            let z = center.z + radius * angle_rad.sin();
+            [x, center.y, z]
+        })
+        .collect::<Vec<[f32; 3]>>()
 }

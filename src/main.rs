@@ -39,10 +39,10 @@ fn main() {
 fn create_world(mut commands: Commands, mut meshes: ResMut<Assets<Mesh>>, mut materials: ResMut<Assets<StandardMaterial>>) {
     let radius = 1.0;
     let mesh_handle = meshes.add(create_hexagon_plane(radius));
-    let material_handle_red = materials.add(Color::rgb(1.0, 0.5, 0.5).into());
+    let material_handle_red = materials.add(Color::rgb(0.4, 0.5, 0.3).into());
 
-    for y in 0..64 {
-        for x in 0..64 {
+    for y in 0..1 {
+        for x in 0..1 {
             commands.spawn(PbrBundle {
                 mesh: mesh_handle.clone(),
                 material: material_handle_red.clone(),
@@ -52,18 +52,8 @@ fn create_world(mut commands: Commands, mut meshes: ResMut<Assets<Mesh>>, mut ma
             });
         }
     }
+}
 
-    let cube_mesh_handle = meshes.add(Mesh::from(shape::Cube { size: 1.0 }));
-    let cube_material_handle = materials.add(Color::rgb(0.5, 0.5, 1.0).into());
-
-    // spawn 32 cubes at random positions between 0 and 64
-    for i in 0..32 {
-        commands.spawn(PbrBundle {
-            mesh: cube_mesh_handle.clone(),
-            material: cube_material_handle.clone(),
-            transform: Transform::from_translation(
-                get_world_pos(radius, Vec2::new(i as f32, i as f32), 0.5)),
-            ..Default::default()
-        });
-    }
+fn create_chunk(origin: Vec3, chunk_size: i32, mesh: Handle<Mesh>, material: Handle<StandardMaterial>) {
+    const plane: Mesh = create_hexagon_plane(1.0);
 }
